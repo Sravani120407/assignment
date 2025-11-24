@@ -1,0 +1,6 @@
+Output of given code snippet:
+20
+ReferenceError: x is not defined
+Reason:
+var is function-scoped, so y becomes available outside the block, but let is block-scoped,
+ so x cannot be accessed outside the {} block, causing a ReferenceError.
