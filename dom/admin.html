@@ -80,6 +80,8 @@
             display: flex;
             justify-content: center;
             margin-top: 20px;
+            align-items: center;
+            gap: 10px;
         }
 
         input[type="text"],
@@ -91,7 +93,24 @@
         #filterCategory {
             width: auto;
         }
+
+        .addBookBtn {
+            width: 100%;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .addBookBtn:hover {
+            background: #0056b3;
+        }
     </style>
+</head>
+
+<body>
+    <h1>Book Management System</h1>
+
     <!-- Add book form -->
     <div id="formContainer">
         <h3>Add Book</h3>
@@ -107,16 +126,6 @@
         </select><br>
 
         <button onclick="addBook()" class="addBookBtn">Add Book</button>
-    </div>
-
-        <select id="category" style="width:100%">
-            <option value="">Select Category</option>
-            <option value="Fiction">Fiction</option>
-            <option value="Comedy">Comedy</option>
-            <option value="Technical">Technical</option>
-        </select><br>
-
-        <button onclick="addBook()" style="width:100%; background:#007bff; color:white;">Add Book</button>
     </div>
 
     <!-- Sort & Filter -->
@@ -230,9 +239,6 @@
 
         function filterBooks() {
             let category = document.getElementById("filterCategory").value;
-
-
-            // category => fiction
 
             if (category === "All") {
                 renderBooks(books);
