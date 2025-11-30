@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debugging Task</title>
+</head>
+<body>
+  <p id="message">Original Message</p>
+  <button id="textButton">Change Text</button>
+  <br><br>
+  <div id="box" style="width: 100px; height: 100px; background-color: lightgray;"></div>
+  <button id="colorButton">Change Background</button>
+  <script>
+    // Bug Fix #1: Changed '#massage' to '#message' - the id selector had a typo
+    const para = document.querySelector('#message');
+    
+    // Bug Fix #2: Changed 'getElementByName' to 'getElementById' - we need to select by ID, not name
+    const textButton = document.getElementById('textButton');
+    
+    // Bug Fix #3: Changed 'addClickEventListener' to 'addEventListener' with 'click' as first parameter
+    // The correct method is addEventListener, not addClickEventListener
+    textButton.addEventListener('click', () => {
+      // Bug Fix #4: Changed 'contentText' to 'textContent' - the correct property is textContent
+      para.textContent = 'New Message';
+    });
+    
+    const box = document.getElementById('box');
+    const colorButton = document.getElementById('colorButton');
+    colorButton.addEventListener('click', () => {
+      // Bug Fix #5: Changed 'box.styl' to 'box.style' - there was a typo, missing the 'e' in style
+      box.style.backgroundColor = 'blue';
+    });
+  </script>
+</body>
+</html>
