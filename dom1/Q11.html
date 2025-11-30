@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding the DOM</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .container {
+            border: 2px solid #333;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="main-heading">Original Heading</h1>
+    
+    <div class="container">
+        <h2>About the DOM</h2>
+        <p>The Document Object Model (DOM) is a programming interface for HTML documents.</p>
+        <p>It represents the page so that programs can change the document structure, style, and content.</p>
+        <p>The DOM represents the document as nodes and objects.</p>
+    </div>
+
+    <div class="container">
+        <h2>Why Learn the DOM?</h2>
+        <p>Understanding the DOM is essential for web development.</p>
+        <p>It allows you to create dynamic and interactive web pages.</p>
+    </div>
+
+    <script>
+        const heading = document.getElementById('main-heading');
+        heading.textContent = 'Welcome to the DOM World!';
+        const paragraphs = document.getElementsByTagName('p');
+        for (let i = 0; i < paragraphs.length; i++) {
+            paragraphs[i].style.color = 'blue';
+        }
+        const firstContainer = document.querySelector('div.container');
+        firstContainer.style.backgroundColor = 'yellow';
+    </script>
+</body>
+</html>
