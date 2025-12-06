@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L0 - Creating and Removing Elements</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        
+        .button-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        button {
+            padding: 12px 24px;
+            margin: 0 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        #addBtn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        #addBtn:hover {
+            background-color: #45a049;
+        }
+        
+        #removeBtn {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        #removeBtn:hover {
+            background-color: #da190b;
+        }
+        
+        #container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-height: 200px;
+        }
+        
+        #container p {
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>DOM Manipulation Lab</h1>
+    
+    <div class="button-container">
+        <button id="addBtn">Add Paragraph</button>
+        <button id="removeBtn">Remove Last Paragraph</button>
+    </div>
+    
+    <div id="container"></div>
+
+    <script>
+        const addBtn = document.getElementById('addBtn');
+        const removeBtn = document.getElementById('removeBtn');
+        const container = document.getElementById('container');
+
+        addBtn.addEventListener('click', function() {
+            const newParagraph = document.createElement('p');
+            newParagraph.textContent = 'This is a new paragraph.';
+            container.appendChild(newParagraph);
+        });
+
+        removeBtn.addEventListener('click', function() {
+            const lastParagraph = container.lastElementChild;
+            
+            if (lastParagraph) {
+                container.removeChild(lastParagraph);
+            } else {
+                alert('No paragraphs to remove!');
+            }
+        });
+    </script>
+</body>
+</html>
