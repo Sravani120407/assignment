@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo Application</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 60px 20px;
+            color: #667eea;
+            font-size: 1.5em;
+            font-weight: 500;
+        }
+
+        .todo-list {
+            list-style: none;
+        }
+
+        .todo-item {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .todo-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .todo-item.completed {
+            background: #e7f5e9;
+            border-color: #c3e6cb;
+        }
+
+        .todo-checkbox {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .todo-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .todo-title {
+            font-size: 1.1em;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .todo-item.completed .todo-title {
+            text-decoration: line-through;
+            color: #6c757d;
+        }
+
+        .todo-status {
+            font-size: 0.85em;
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .todo-item.completed .todo-status {
+            color: #28a745;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: #dc3545;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 My Todos</h1>
+        <div class="subtitle">First 20 todos from JSONPlaceholder API</div>
+        <div id="app">
+            <div class="loading">Loading todos...</div>
+        </div>
+    </div>
+
+    <script>
+        // Constants
+        const API_URL = 'https://jsonplaceholder.typicode.com/todos';
+        const STORAGE_KEY = 'todos';
+        const MAX_TODOS = 20;
+
+        // Fetch todos from API
+        async function fetchTodos() {
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error('Failed to fetch todos');
+                const todos = await response.json();
+                return todos.slice(0, MAX_TODOS);
+            } catch (error) {
+                console.error('Error fetching todos:', error);
+                throw error;
+            }
+        }
+
+        // Store todos in Local Storage
+        function storeTodos(todos) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+        }
+
+        // Retrieve todos from Local Storage
+        function getTodos() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            return stored ? JSON.parse(stored) : null;
+        }
+
+        // Delete a specific todo
+        function deleteTodo(id) {
+            const todos = getTodos();
+            const updated = todos.filter(todo => todo.id !== id);
+            storeTodos(updated);
+            return updated;
+        }
+
+        // Toggle todo completion status (Bonus feature)
+        function toggleTodo(id) {
+            const todos = getTodos();
+            const updated = todos.map(todo => 
+                todo.id === id ? { ...todo, completed: !todo.completed } : todo
+            );
+            storeTodos(updated);
+            return updated;
+        }
+
+        // Render todos to the UI
+        function renderTodos(todos) {
+            const app = document.getElementById('app');
+            
+            // Show "No Todos Available" message when empty (Bonus feature)
+            if (!todos || todos.length === 0) {
+                app.innerHTML = '<div class="empty-message">🎉 No Todos Available!</div>';
+                return;
+            }
+
+            const list = document.createElement('ul');
+            list.className = 'todo-list';
+
+            todos.forEach(todo => {
+                const item = document.createElement('li');
+                item.className = `todo-item ${todo.completed ? 'completed' : ''}`;
+                
+                // Checkbox for toggling completion (Bonus feature)
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'todo-checkbox';
+                checkbox.checked = todo.completed;
+                checkbox.addEventListener('change', () => {
+                    const updated = toggleTodo(todo.id);
+                    renderTodos(updated);
+                });
+
+                const content = document.createElement('div');
+                content.className = 'todo-content';
+
+                // Todo title
+                const title = document.createElement('div');
+                title.className = 'todo-title';
+                title.textContent = todo.title;
+
+                // Completed status
+                const status = document.createElement('div');
+                status.className = 'todo-status';
+                status.textContent = todo.completed ? 'Completed' : 'Pending';
+
+                content.appendChild(title);
+                content.appendChild(status);
+
+                // Delete button
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.addEventListener('click', () => {
+                    const updated = deleteTodo(todo.id);
+                    renderTodos(updated);
+                });
+
+                item.appendChild(checkbox);
+                item.appendChild(content);
+                item.appendChild(deleteBtn);
+                list.appendChild(item);
+            });
+
+            app.innerHTML = '';
+            app.appendChild(list);
+        }
+
+        // Initialize the application
+        async function init() {
+            const app = document.getElementById('app');
+            
+            // Check if todos exist in Local Storage
+            let todos = getTodos();
+            
+            if (!todos) {
+                // Fetch from API if not in storage
+                try {
+                    todos = await fetchTodos();
+                    storeTodos(todos);
+                } catch (error) {
+                    app.innerHTML = '<div class="error">❌ Failed to load todos. Please check your connection and refresh.</div>';
+                    return;
+                }
+            }
+            
+            renderTodos(todos);
+        }
+
+        // Start the application
+        init();
+    </script>
+</body>
+</html>
